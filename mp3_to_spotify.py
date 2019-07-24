@@ -20,29 +20,28 @@ REDIRECT_URI = 'http://localhost:8080/callback'
 
 
 def clean_song(name):
-	name = name.lower()
-	name = name.replace('clip officiel', '')
-	name = name.replace('[', '')
-	name = name.replace(']', '')
-	name = name.replace('(', '')
-	name = name.replace(')', '')
-	name = name.replace('"', '')
-	name = name.replace(' - ', ' ')
-	name = name.replace('_', '')
-	name = name.replace(' ft. ', ' ')
-	name = name.replace(' feat. ', ' ')
-	name = name.replace(',', '')
-	name = name.replace(' x ', ' ')
-	name = name.replace('lyrics', '')
-	name = name.replace('video', ' ')
-	name = name.replace('audio only', '')
-	name = name.replace('radio edit', '')
-	name = name.replace('audio', '')
-	name = name.replace('hq', '')
-	name = name.replace('hd', '')
-
-	return name
-
+	return (
+    name.lower()
+    .replace("clip officiel", "")
+    .replace("[", "")
+    .replace("]", "")
+    .replace("(", "")
+    .replace(")", "")
+    .replace('"', "")
+    .replace(" - ", " ")
+    .replace("_", "")
+    .replace(" ft. ", " ")
+    .replace(" feat. ", " ")
+    .replace(",", "")
+    .replace(" x ", " ")
+    .replace("lyrics", "")
+    .replace("video", " ")
+    .replace("audio only", "")
+    .replace("radio edit", "")
+    .replace("audio", "")
+    .replace("hq", "")
+    .replace("hd", "")
+)
 
 def read_songs(path):
 	for root, dirs, files in os.walk(path):
@@ -69,7 +68,7 @@ def get_spotify_id(token, name):
 
 	results = r1.json()
 	if r1.status_code != 200:
-		print('ERREUR GETTING SPOTIFY ID')
+		print('ERROR GETTING SPOTIFY ID')
 		return
 	if len(results['tracks']['items']) == 0:
 		return
@@ -127,12 +126,12 @@ def process(directory):
 								   auth.encode()).decode()})
 
 	if r.status_code != 200:
-		raise Exception('ERREUR GETTING TOKEN')
+		raise Exception('ERROR GETTING TOKEN')
 
 	token = r.json()['access_token']
 
 	# 3. Getting the tracks id from spotify
-	click.echo("➡️  Retrieving the tracks id from Spotify")
+	click.echo("➡️  Retrieving the track's id from Spotify")
 	all_tracks = list(get_spotify_ids(token, path))
 	tracks_to_add = list(filter(lambda x: x is not None, [x[0] for x in all_tracks]))
 	not_found_tracks = list(filter(lambda x: x is not None, [x[1] for x in all_tracks]))
